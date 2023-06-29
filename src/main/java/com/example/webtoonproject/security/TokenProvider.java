@@ -22,7 +22,7 @@ public class TokenProvider {
   private static final long TOKEN_EXPIRE_TIME = 1000*60*60*24;
   private final AuthService authService;
 
-  @Value("{spring.jwt.secret}")
+  @Value("${spring.jwt.secret}")
   private String secretKey;
   public String generateToken(String userId, Authority role){
     Claims claims = Jwts.claims().setSubject(userId);
