@@ -6,6 +6,9 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
+import com.example.webtoonproject.domain.Webtoon;
+import com.example.webtoonproject.dto.WebtoonDto;
+import com.example.webtoonproject.repository.WebtoonRepository;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -27,9 +30,14 @@ public class AwsS3Service {
   @Value("${cloud.aws.s3.bucket}")
   private String bucket;
 
+  @Value("${cloud.aws.s3.url}")
+  private String url;
+
   private final AmazonS3 amazonS3;
 
-  public List<String> uploadFile(List<MultipartFile> multipartFile) {
+  private final WebtoonRepository webtoonRepository;
+
+  public List<String> uploadFile(List<MultipartFile> multipartFile, WebtoonDto.Upload request) {
     List<String> fileNameList = new ArrayList<>();
 
     // forEach 구문을 통해 multipartFile로 넘어온 파일들 하나씩 fileNameList에 추가
@@ -49,7 +57,21 @@ public class AwsS3Service {
       fileNameList.add(fileName);
     });
 
+    for (String x : fileNameList) {
+      this.webtoonRepository.save(request.toEntity(url+x));
+    }
+
     return fileNameList;
+  }
+
+  public List<String> downloadFile(String webtoonName, String webtoonChapter){
+    List<Webtoon> list = webtoonRepository.findWebtoonByWebtoonNameAndWebtoonChapter(
+        webtoonName, webtoonChapter);
+    List<String> result = new ArrayList<>();
+    for (int i = 0; i < list.size(); i++) {
+      result.add(list.get(i).getWebtoonUrl());
+    }
+    return result;
   }
 
   public void deleteFile(String fileName) {
