@@ -1,6 +1,5 @@
 package com.example.webtoonproject.controller;
 
-import com.example.webtoonproject.aws.S3Uploader;
 import com.example.webtoonproject.dto.WebtoonDto;
 import com.example.webtoonproject.service.AwsS3Service;
 import java.io.IOException;
@@ -25,13 +24,13 @@ public class WebtoonController {
   private final AwsS3Service awsS3Service;
 
   @PostMapping("/upload")
-  public ResponseEntity<List<String>> uploadFile(@RequestPart List<MultipartFile> images,
+  public ResponseEntity<?> uploadFile(@RequestPart List<MultipartFile> images,
       @RequestPart(value = "webtoon") WebtoonDto.Upload request){
     return ResponseEntity.ok(awsS3Service.uploadFile(images,request));
   }
 
   @GetMapping("/download")
-  public ResponseEntity<List<String>> downloadFile(
+  public ResponseEntity<?> downloadFile(
       @RequestParam String webtoonName, String webtoonChapter){
     return ResponseEntity.ok(awsS3Service.downloadFile(webtoonName,webtoonChapter));
   }

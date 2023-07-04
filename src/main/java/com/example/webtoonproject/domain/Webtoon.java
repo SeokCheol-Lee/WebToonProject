@@ -1,6 +1,7 @@
 package com.example.webtoonproject.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -11,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @Setter
@@ -19,15 +22,17 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Webtoon {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy =GenerationType.IDENTITY)
   private Long id;
 
   private String webtoonName;
   private String webtoonChapter;
   private String webtoonUrl;
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+  @CreatedDate
   private LocalDateTime registerDate;
 }
