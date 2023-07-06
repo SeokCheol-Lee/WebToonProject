@@ -106,7 +106,7 @@ class AuthServiceTest {
         .userId("test")
         .userPassword("qwe123")
         .role(Authority.ROLE_USER)
-        .cash(0L).build();
+            .build();
     userRepository.save(user);
 
     SignIn si = SignIn.builder()
