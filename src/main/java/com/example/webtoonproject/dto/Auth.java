@@ -33,7 +33,6 @@ public class Auth {
           .userName(this.userName)
           .userPassword(this.userPassword)
           .role(Authority.ROLE_USER)
-          .cash(0L)
           .build();
     }
   }

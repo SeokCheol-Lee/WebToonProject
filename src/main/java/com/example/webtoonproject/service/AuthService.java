@@ -20,6 +20,7 @@ public class AuthService implements UserDetailsService {
 
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+  private final AccountService accountService;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -34,6 +35,7 @@ public class AuthService implements UserDetailsService {
     }
     user.setUserPassword(this.passwordEncoder.encode(user.getUserPassword()));
     User result = this.userRepository.save(user.toEntity());
+    accountService.createAccount(result.getUserId());
     return result;
   }
 

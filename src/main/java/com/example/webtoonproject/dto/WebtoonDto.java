@@ -1,6 +1,5 @@
 package com.example.webtoonproject.dto;
 
-import com.example.webtoonproject.domain.Webtoon;
 import lombok.Builder;
 import lombok.Data;
 

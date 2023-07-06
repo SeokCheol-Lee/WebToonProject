@@ -5,10 +5,8 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.PutObjectResult;
-import com.example.webtoonproject.domain.Webtoon;
+import com.example.webtoonproject.domain.WebtoonUrl;
 import com.example.webtoonproject.dto.WebtoonDto;
-import com.example.webtoonproject.dto.WebtoonDto.Upload;
 import com.example.webtoonproject.exception.WebtoonException;
 import com.example.webtoonproject.repository.WebtoonRepository;
 import com.example.webtoonproject.type.ErrorCode;
@@ -20,10 +18,8 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -48,7 +44,7 @@ public class AwsS3Service {
       throw new WebtoonException(ErrorCode.VALIDATE_FILE_EXISTS);
     }
 
-    List<Webtoon> webtoonList = new ArrayList<>();
+    List<WebtoonUrl> webtoonUrlList = new ArrayList<>();
 
     for(MultipartFile multipartFile : multipartFiles){
       String fileName = CommonUtils.buildFileName(
@@ -61,22 +57,22 @@ public class AwsS3Service {
         amazonS3.putObject(new PutObjectRequest(bucket,fileName,inputStream,objectMetadata)
             .withCannedAcl(CannedAccessControlList.PublicRead));
         String url = amazonS3.getUrl(bucket,fileName).toString();
-        Webtoon webtoon = Webtoon.builder()
+        WebtoonUrl webtoonUrl = WebtoonUrl.builder()
             .webtoonName(request.getWebtoonName())
             .webtoonChapter(request.getWebtoonChapter())
             .webtoonUrl(url)
             .build();
-        webtoonList.add(webtoon);
+        webtoonUrlList.add(webtoonUrl);
       } catch (IOException e) {
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
       }
     }
-    this.webtoonRepository.saveAll(webtoonList);
-    return webtoonList.size() + " files upload";
+    this.webtoonRepository.saveAll(webtoonUrlList);
+    return webtoonUrlList.size() + " files upload";
   }
 
   public List<String> downloadFile(String webtoonName, String webtoonChapter){
-    List<Webtoon> list = webtoonRepository.findWebtoonByWebtoonNameAndWebtoonChapter(
+    List<WebtoonUrl> list = webtoonRepository.findWebtoonByWebtoonNameAndWebtoonChapter(
         webtoonName, webtoonChapter);
     List<String> result = new ArrayList<>();
     for (int i = 0; i < list.size(); i++) {

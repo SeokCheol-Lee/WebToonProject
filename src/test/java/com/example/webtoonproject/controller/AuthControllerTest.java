@@ -70,7 +70,7 @@ class AuthControllerTest {
             .userPassword(passwordEncoder.encode("qwe123"))
             .registerDate(LocalDateTime.now())
             .role(Authority.ROLE_USER)
-            .cash(0L).build());
+            .build());
 
     //when
     String body = objectMapper.writeValueAsString(request);
@@ -102,7 +102,7 @@ class AuthControllerTest {
             .userPassword(passwordEncoder.encode("qwe123"))
             .registerDate(LocalDateTime.now())
             .role(Authority.ROLE_USER)
-            .cash(0L).build());
+            .build());
 
     String token = tokenProvider.generateToken(request.getUserId(),Authority.ROLE_USER);
     String body = objectMapper.writeValueAsString(request);

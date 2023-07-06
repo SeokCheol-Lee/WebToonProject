@@ -1,13 +1,8 @@
 package com.example.webtoonproject.domain;
 
 import com.example.webtoonproject.type.Authority;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,6 +32,7 @@ public class User implements UserDetails {
 
   @Id
   @GeneratedValue(strategy =GenerationType.IDENTITY)
+  @Column(name="USER_ID")
   private Long id;
 
   private String userName;
@@ -48,7 +44,6 @@ public class User implements UserDetails {
   private LocalDateTime lastUpdateDate;
   @Enumerated(EnumType.STRING)
   private Authority role;
-  private Long cash;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
