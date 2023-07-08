@@ -32,7 +32,7 @@ public class User implements UserDetails {
 
   @Id
   @GeneratedValue(strategy =GenerationType.IDENTITY)
-  @Column(name="USER_ID")
+  @Column(name="USERTABLE_ID")
   private Long id;
 
   private String userName;

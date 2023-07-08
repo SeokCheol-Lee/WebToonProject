@@ -1,10 +1,15 @@
 package com.example.webtoonproject.controller;
 
+import com.example.webtoonproject.domain.Account;
 import com.example.webtoonproject.domain.User;
 import com.example.webtoonproject.dto.Calculate;
+import com.example.webtoonproject.dto.Calculate.AddCash;
+import com.example.webtoonproject.dto.Calculate.UseCash;
+import com.example.webtoonproject.service.AccountService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,11 +18,34 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/calculate")
+@RequiredArgsConstructor
 public class CalculateController {
 
+    private final AccountService accountService;
+
     @PostMapping("/addcash")
-    public ResponseEntity<?> addCash(@RequestBody Calculate.AddCash cash,
+    public Calculate.ResponseCash addCash(@RequestBody AddCash cash,
                                      @AuthenticationPrincipal User user){
-        return null;
+        Account account = accountService.addCash(cash, user);
+        return Calculate.ResponseCash.builder()
+            .cash(account.getBalance())
+            .build();
+    }
+
+    @PostMapping("/usecash")
+    public Calculate.ResponseCash useCash(@RequestBody UseCash cash,
+        @AuthenticationPrincipal User user){
+        Account account = accountService.useCash(cash, user);
+        return Calculate.ResponseCash.builder()
+            .cash(account.getBalance())
+            .build();
+    }
+
+    @GetMapping("/mycash")
+    public Calculate.ResponseCash myCash(@AuthenticationPrincipal User user){
+        Account account = accountService.getAccount(user);
+        return Calculate.ResponseCash.builder()
+            .cash(account.getBalance())
+            .build();
     }
 }

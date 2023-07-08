@@ -2,11 +2,13 @@ package com.example.webtoonproject.service;
 
 import com.example.webtoonproject.domain.Account;
 import com.example.webtoonproject.domain.User;
+import com.example.webtoonproject.dto.Calculate;
 import com.example.webtoonproject.exception.AuthException;
 import com.example.webtoonproject.repository.AccountRepository;
 import com.example.webtoonproject.repository.UserRepository;
 import com.example.webtoonproject.type.ErrorCode;
 import jakarta.transaction.Transactional;
+import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,7 @@ public class AccountService {
                 .orElse("1000");
 
         Account account = Account.builder()
-                .accountNumber(userId)
+                .accountUser(user)
                 .accountNumber(newAccountNumber)
                 .balance(0L)
                 .build();
@@ -42,10 +44,26 @@ public class AccountService {
     }
 
     @Transactional
-    public Optional<Account> getAccount(String id){
-        User user = userRepository.findUserByUserId(id)
-                .orElseThrow(() -> new AuthException(ErrorCode.NOT_EXIST_USERID));
-        return accountRepository.findBy(user);
+    public Account getAccount(User user){
+        Account account = accountRepository.findAllByAccountUser(user)
+            .orElseThrow(() -> new AuthException(ErrorCode.NOT_EXIST_USERID));
+        return account;
+    }
+
+    @Transactional
+    public Account addCash(Calculate.AddCash cash, User user){
+        Account account = accountRepository.findAllByAccountUser(user)
+            .orElseThrow(() -> new AuthException(ErrorCode.NOT_EXIST_USERID));
+        account.addBalance(cash.getCash());
+        return account;
+    }
+
+    @Transactional
+    public Account useCash(Calculate.UseCash cash, User user){
+        Account account = accountRepository.findAllByAccountUser(user)
+            .orElseThrow(() -> new AuthException(ErrorCode.NOT_EXIST_USERID));
+        account.useBalance(cash.getCash());
+        return account;
     }
 
 }

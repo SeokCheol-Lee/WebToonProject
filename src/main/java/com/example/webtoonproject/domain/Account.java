@@ -1,5 +1,8 @@
 package com.example.webtoonproject.domain;
 
+import com.example.webtoonproject.exception.CashException;
+import com.example.webtoonproject.type.ErrorCode;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -21,8 +24,10 @@ public class Account {
     @Column(name = "ACCOUNT_ID")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "USER_ID")
+    @OneToOne
+    @JoinTable(name = "ACCOUNT_USER",
+        joinColumns = @JoinColumn(name = "ACCOUNT_ID"),
+        inverseJoinColumns= @JoinColumn(name = "USERTABLE_ID"))
     private User accountUser;
     private String accountNumber;
     private Long balance;
@@ -35,6 +40,13 @@ public class Account {
 
     public void addBalance(Long amount){
         balance += amount;
+    }
+
+    public void useBalance(Long amount){
+        if(amount > balance){
+            throw new CashException(ErrorCode.AMOUNT_EXCEED_CASH);
+        }
+        balance -= amount;
     }
 
 }
