@@ -2,10 +2,13 @@ package com.example.webtoonproject.service;
 
 import com.example.webtoonproject.domain.Account;
 import com.example.webtoonproject.domain.User;
+import com.example.webtoonproject.domain.Webtoon;
 import com.example.webtoonproject.dto.Calculate;
 import com.example.webtoonproject.exception.AuthException;
+import com.example.webtoonproject.exception.WebtoonException;
 import com.example.webtoonproject.repository.AccountRepository;
 import com.example.webtoonproject.repository.UserRepository;
+import com.example.webtoonproject.repository.WebtoonRepository;
 import com.example.webtoonproject.type.ErrorCode;
 import jakarta.transaction.Transactional;
 import java.util.Locale;
@@ -22,6 +25,7 @@ public class AccountService {
 
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
+    private final WebtoonRepository webtoonRepository;
 
     @Transactional
     public Account createAccount(String userId){
@@ -62,6 +66,9 @@ public class AccountService {
     public Account useCash(Calculate.UseCash cash, User user){
         Account account = accountRepository.findAllByAccountUser(user)
             .orElseThrow(() -> new AuthException(ErrorCode.NOT_EXIST_USERID));
+        Webtoon webtoon = webtoonRepository.findWebtoonByWebtoonName(cash.getWebtoonName())
+                .orElseThrow(() -> new WebtoonException(ErrorCode.VALIDATE_WEBTOON_EXISTS));
+        webtoon.addDonation(cash.getCash());
         account.useBalance(cash.getCash());
         return account;
     }

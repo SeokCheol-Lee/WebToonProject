@@ -16,6 +16,7 @@ public class Calculate {
     @Data
     @NoArgsConstructor
     public static class UseCash{
+        private String webtoonName;
         private Long cash;
     }
 

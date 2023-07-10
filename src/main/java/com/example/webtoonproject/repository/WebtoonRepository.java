@@ -1,12 +1,11 @@
 package com.example.webtoonproject.repository;
 
-import com.example.webtoonproject.domain.WebtoonUrl;
-import java.util.List;
+import com.example.webtoonproject.domain.Webtoon;
+import java.util.Optional;
+import javax.swing.text.html.Option;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public interface WebtoonRepository extends JpaRepository<WebtoonUrl,Long> {
-  List<WebtoonUrl> findWebtoonByWebtoonNameAndWebtoonChapter(String webtoonName, String webtoonChapter);
+public interface WebtoonRepository extends JpaRepository<Webtoon, Long> {
   boolean existsByWebtoonName(String webtoonName);
+  Optional<Webtoon> findWebtoonByWebtoonName(String webtoonName);
 }

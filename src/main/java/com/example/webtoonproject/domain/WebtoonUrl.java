@@ -27,7 +27,9 @@ public class WebtoonUrl {
   @Column(name = "WEBTOON_URL_ID")
   private Long id;
 
-  private String webtoonName;
+  @ManyToOne
+  @JoinColumn(name = "WEBTOON_ID")
+  private Webtoon webtoon;
   private String webtoonChapter;
   private String webtoonUrl;
 

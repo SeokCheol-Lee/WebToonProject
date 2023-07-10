@@ -1,11 +1,13 @@
 package com.example.webtoonproject.controller;
 
+import com.example.webtoonproject.domain.User;
 import com.example.webtoonproject.dto.WebtoonDto;
 import com.example.webtoonproject.service.AwsS3Service;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,8 +27,8 @@ public class WebtoonController {
 
   @PostMapping("/upload")
   public ResponseEntity<?> uploadFile(@RequestPart List<MultipartFile> images,
-      @RequestPart(value = "webtoon") WebtoonDto.Upload request){
-    return ResponseEntity.ok(awsS3Service.uploadFile(images,request));
+      @RequestPart(value = "webtoon") WebtoonDto.Upload request, @AuthenticationPrincipal User user){
+    return ResponseEntity.ok(awsS3Service.uploadFile(images,request,user));
   }
 
   @GetMapping("/download")
