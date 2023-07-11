@@ -11,7 +11,8 @@ public enum ErrorCode {
   NOT_EXIST_USERID("존재하지 않는 아이디입니다."),
   NOT_MATCH_USERPASSWORD("일치하지 않는 비밀번호입니다."),
   VALIDATE_FILE_EXISTS("파일이 존재하지 않습니다."),
-  VALIDATE_WEBTOON_EXISTS("존재하지 않는 웹툰입니다.");
+  VALIDATE_WEBTOON_EXISTS("존재하지 않는 웹툰입니다."),
+  ACCOUNT_NOT_FOUND("존재하지 않는 계좌입니다.");
 
   private final String description;
 }

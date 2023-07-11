@@ -5,7 +5,9 @@ import com.example.webtoonproject.domain.User;
 import com.example.webtoonproject.dto.Calculate;
 import com.example.webtoonproject.dto.Calculate.AddCash;
 import com.example.webtoonproject.dto.Calculate.UseCash;
+import com.example.webtoonproject.exception.AccountException;
 import com.example.webtoonproject.service.AccountService;
+import com.example.webtoonproject.type.TransactionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,20 +27,38 @@ public class CalculateController {
 
     @PostMapping("/addcash")
     public Calculate.ResponseCash addCash(@RequestBody AddCash cash,
-                                     @AuthenticationPrincipal User user){
-        Account account = accountService.addCash(cash, user);
-        return Calculate.ResponseCash.builder()
-            .cash(account.getBalance())
-            .build();
+                                     @AuthenticationPrincipal User user) throws InterruptedException{
+        try {
+            Account account = accountService.addCash(cash, user);
+            return Calculate.ResponseCash.builder()
+                    .cash(account.getBalance())
+                    .build();
+        }catch (AccountException e){
+            accountService.saveFailedUseTransaction(
+                    user,
+                    cash.getCash(),
+                    TransactionType.ADD
+            );
+            throw e;
+        }
     }
 
     @PostMapping("/usecash")
     public Calculate.ResponseCash useCash(@RequestBody UseCash cash,
-        @AuthenticationPrincipal User user){
-        Account account = accountService.useCash(cash, user);
-        return Calculate.ResponseCash.builder()
-            .cash(account.getBalance())
-            .build();
+        @AuthenticationPrincipal User user) throws InterruptedException{
+        try {
+            Account account = accountService.useCash(cash, user);
+            return Calculate.ResponseCash.builder()
+                    .cash(account.getBalance())
+                    .build();
+        }catch (AccountException e){
+            accountService.saveFailedUseTransaction(
+                    user,
+                    cash.getCash(),
+                    TransactionType.USE
+            );
+            throw e;
+        }
     }
 
     @GetMapping("/mycash")
