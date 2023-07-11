@@ -34,5 +34,5 @@ public class WebtoonUrl {
   private String webtoonUrl;
 
   @CreatedDate
-  private LocalDateTime registerDate;
+  private LocalDateTime registerDateTime;
 }

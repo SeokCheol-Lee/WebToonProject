@@ -43,7 +43,7 @@ public class Webtoon {
   public void addDonation(Long amount){
     donation += amount;
   }
-  public Long getDonation(){
+  public Long calculateDonation(){
     Long result = donation;
     donation = 0L;
     return result;

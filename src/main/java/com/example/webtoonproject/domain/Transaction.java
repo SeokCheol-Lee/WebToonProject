@@ -19,8 +19,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class Transaction {
     @Id
-    @GeneratedValue
-    private Long id;
+    private String transactionId;
 
     @Enumerated(EnumType.STRING)
     private TransactionType trasactionType;
@@ -32,7 +31,7 @@ public class Transaction {
 
     private Long amount;
     private Long balanceSnapshot;
-    private String transactionId;
+
     private LocalDateTime transactedAt;
 
     @CreatedDate

@@ -25,9 +25,7 @@ public class Account {
     private Long id;
 
     @OneToOne
-    @JoinTable(name = "ACCOUNT_USER",
-        joinColumns = @JoinColumn(name = "ACCOUNT_ID"),
-        inverseJoinColumns= @JoinColumn(name = "USERTABLE_ID"))
+    @JoinColumn(name = "USERTABLE_ID")
     private User accountUser;
     private String accountNumber;
     private Long balance;

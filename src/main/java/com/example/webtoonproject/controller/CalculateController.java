@@ -25,40 +25,22 @@ public class CalculateController {
 
     private final AccountService accountService;
 
-    @PostMapping("/addcash")
+    @PostMapping("/add-cash")
     public Calculate.ResponseCash addCash(@RequestBody AddCash cash,
                                      @AuthenticationPrincipal User user) throws InterruptedException{
-        try {
-            Account account = accountService.addCash(cash, user);
-            return Calculate.ResponseCash.builder()
-                    .cash(account.getBalance())
-                    .build();
-        }catch (AccountException e){
-            accountService.saveFailedUseTransaction(
-                    user,
-                    cash.getCash(),
-                    TransactionType.ADD
-            );
-            throw e;
-        }
+        Account account = accountService.addCash(cash, user);
+        return Calculate.ResponseCash.builder()
+            .cash(account.getBalance())
+            .build();
     }
 
-    @PostMapping("/usecash")
+    @PostMapping("/use-cash")
     public Calculate.ResponseCash useCash(@RequestBody UseCash cash,
         @AuthenticationPrincipal User user) throws InterruptedException{
-        try {
-            Account account = accountService.useCash(cash, user);
-            return Calculate.ResponseCash.builder()
-                    .cash(account.getBalance())
-                    .build();
-        }catch (AccountException e){
-            accountService.saveFailedUseTransaction(
-                    user,
-                    cash.getCash(),
-                    TransactionType.USE
-            );
-            throw e;
-        }
+        Account account = accountService.useCash(cash, user);
+        return Calculate.ResponseCash.builder()
+            .cash(account.getBalance())
+            .build();
     }
 
     @GetMapping("/mycash")

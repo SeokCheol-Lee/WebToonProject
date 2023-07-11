@@ -68,23 +68,33 @@ public class AccountService {
 
     @Transactional
     public Account addCash(Calculate.AddCash cash, User user){
-        Account account = accountRepository.findAllByAccountUser(user)
-            .orElseThrow(() -> new AuthException(ErrorCode.NOT_EXIST_USERID));
-        saveAndGetTransaction(ADD,TransactionResultType.SUCCESS,cash.getCash(),account);
-        account.addBalance(cash.getCash());
-        return account;
+        try{
+            Account account = accountRepository.findAllByAccountUser(user)
+                .orElseThrow(() -> new AuthException(ErrorCode.NOT_EXIST_USERID));
+            saveAndGetTransaction(ADD,TransactionResultType.SUCCESS,cash.getCash(),account);
+            account.addBalance(cash.getCash());
+            return account;
+        }catch (AccountException e){
+            saveFailedUseTransaction(user,cash.getCash(), ADD);
+            throw e;
+        }
     }
 
     @Transactional
     public Account useCash(Calculate.UseCash cash, User user){
-        Account account = accountRepository.findAllByAccountUser(user)
-            .orElseThrow(() -> new AuthException(ErrorCode.NOT_EXIST_USERID));
-        Webtoon webtoon = webtoonRepository.findWebtoonByWebtoonName(cash.getWebtoonName())
+        try{
+            Account account = accountRepository.findAllByAccountUser(user)
+                .orElseThrow(() -> new AuthException(ErrorCode.NOT_EXIST_USERID));
+            Webtoon webtoon = webtoonRepository.findWebtoonByWebtoonName(cash.getWebtoonName())
                 .orElseThrow(() -> new WebtoonException(ErrorCode.VALIDATE_WEBTOON_EXISTS));
-        webtoon.addDonation(cash.getCash());
-        saveAndGetTransaction(USE,TransactionResultType.SUCCESS,cash.getCash(),account);
-        account.useBalance(cash.getCash());
-        return account;
+            webtoon.addDonation(cash.getCash());
+            saveAndGetTransaction(USE,TransactionResultType.SUCCESS,cash.getCash(),account);
+            account.useBalance(cash.getCash());
+            return account;
+        }catch (AccountException e){
+            saveFailedUseTransaction(user, cash.getCash(), USE);
+            throw e;
+        }
     }
 
     private Transaction saveAndGetTransaction(

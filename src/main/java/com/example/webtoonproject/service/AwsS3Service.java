@@ -62,19 +62,8 @@ public class AwsS3Service {
             .withCannedAcl(CannedAccessControlList.PublicRead));
         String url = amazonS3.getUrl(bucket,fileName).toString();
 
-        Webtoon webtoon;
+        Webtoon webtoon = existsWebtoon(request.getWebtoonName(), user);
 
-        if(webtoonRepository.existsByWebtoonName(request.getWebtoonName())){
-          webtoon = webtoonRepository.findWebtoonByWebtoonName(request.getWebtoonName())
-              .orElseThrow(() -> new WebtoonException(ErrorCode.VALIDATE_WEBTOON_EXISTS));
-        }else{
-          webtoon = webtoonRepository.save(Webtoon.builder()
-              .webtoonName(request.getWebtoonName())
-              .donation(0L)
-              .user(user)
-              .build());
-          webtoonRepository.save(webtoon);
-        }
         WebtoonUrl webtoonUrl = WebtoonUrl.builder()
             .webtoon(webtoon)
             .webtoonChapter(request.getWebtoonChapter())
@@ -87,6 +76,19 @@ public class AwsS3Service {
     }
     this.webtoonUrlRepository.saveAll(webtoonUrlList);
     return webtoonUrlList.size() + " files upload";
+  }
+
+  public Webtoon existsWebtoon(String webtoonName, User user){
+    if(webtoonRepository.existsByWebtoonName(webtoonName)){
+      return webtoonRepository.findWebtoonByWebtoonName(webtoonName)
+          .orElseThrow(() -> new WebtoonException(ErrorCode.VALIDATE_WEBTOON_EXISTS));
+    }else{
+      return webtoonRepository.save(Webtoon.builder()
+          .webtoonName(webtoonName)
+          .donation(0L)
+          .user(user)
+          .build());
+    }
   }
 
   public List<String> downloadFile(String webtoonName, String webtoonChapter){
