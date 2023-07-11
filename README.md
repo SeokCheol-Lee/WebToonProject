@@ -27,7 +27,7 @@
   - 정산시에는 누적된 금액 전부가 정산된다.
 
 ## ERD
-![ERD](doc/img/WebToonProject.png)
+![ERD](doc/img/ERD.png)
 
 ## Trouble Shooting
 [go to the trouble shooting section](doc/TROUBLE_SHOOTING.md)
