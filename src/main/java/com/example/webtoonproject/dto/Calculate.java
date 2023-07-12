@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 public class Calculate {
 
     @Data
-    @NoArgsConstructor
+    @Builder
     public static class AddCash{
         private Long cash;
     }
 
     @Data
-    @NoArgsConstructor
+    @Builder
     public static class UseCash{
         private String webtoonName;
         private Long cash;
