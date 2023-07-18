@@ -30,7 +30,7 @@
 ![ERD](doc/img/ERD.png)
 
 ## Trouble Shooting
-[go to the trouble shooting section](doc/TROUBLE_SHOOTING.md)
+[go to the trouble shooting section](doc/Trouble%20Shooting.md)
 
 ### Tech Stack
 <div align=center> 
