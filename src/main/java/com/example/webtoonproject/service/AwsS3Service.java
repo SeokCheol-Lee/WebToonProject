@@ -35,9 +35,6 @@ public class AwsS3Service {
   @Value("${cloud.aws.s3.bucket}")
   private String bucket;
 
-  @Value("${cloud.aws.s3.url}")
-  private String url;
-
   private final AmazonS3 amazonS3;
 
   private final WebtoonUrlRepository webtoonUrlRepository;

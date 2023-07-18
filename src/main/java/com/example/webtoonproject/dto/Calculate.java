@@ -3,7 +3,6 @@ package com.example.webtoonproject.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 public class Calculate {
 

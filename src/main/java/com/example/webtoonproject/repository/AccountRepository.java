@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface AccountRepository extends JpaRepository<Account, Long> {
     Optional<Account> findFirstByOrderByIdDesc();
 
-    @Lock(LockModeType.READ)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Account> findAllByAccountUser(User user);
 
     Optional<Account> findAccountByAccountNumber(String accountNumber);
